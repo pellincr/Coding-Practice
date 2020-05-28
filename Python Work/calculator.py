@@ -43,36 +43,50 @@ def get_Priority(op):
     else:
         return 0
 
+def get_num(eq):
+    i = 0
+    val = 0
+    while i < len(eq) and eq[i].isnumeric():
+        val = (val*10) + int(eq[i])
+        i = i+1
+    return val
+
 #calc: equation(string) -> num
 #purpose: to determine what the given calculation equates to            
 def calc(eq):
     try:
         if isBalanced(eq):
-            for element in eq:
+            while eq != "":
                 #element is a number
-                if element.isnumeric():
-                    numstack.append(int(element))
+                if eq[0:1].isnumeric():
+                    num = (get_num(eq))
+                    numstack.append(num)
+                    eq = eq[len(str(num)):len(eq)]
                 #element is an open parenthesis
-                elif element == "(":
-                    opstack.append(element)
+                elif eq[0:1] == "(":
+                    opstack.append(eq[0:1])
+                    eq = eq[1:len(eq)]
                 #element is a closed parenthesis
-                elif element == ")":
+                elif eq[0:1] == ")":
                     op = opstack.pop()
                     while(opstack != [] and op != "("):
                         val2 = numstack.pop()
                         val1 = numstack.pop()
                         numstack.append(evaluate(val1, val2, op)) 
-                        op = opstack.pop() 
+                        op = opstack.pop()
+                        eq = eq[1:len(eq)] 
                 #element is an operator                      
-                elif isOp(element):
-                    while(opstack != [] and get_Priority(opstack[len(opstack)-1])>= get_Priority(element)):
+                elif isOp(eq[0:1]):
+                    while(opstack != [] and get_Priority(opstack[len(opstack)-1])>= get_Priority(eq[0:1])):
                         op = opstack.pop()
                         val2 = numstack.pop()
                         val1 = numstack.pop()
                         numstack.append(evaluate(val1, val2, op))
-                    opstack.append(element)
-                elif element == " ":
-                    continue
+                    opstack.append(eq[0:1])
+                    eq = eq[1:len(eq)]
+                elif eq[0:1] == " ":
+                    eq = eq[1:len(eq)]
+                
             #for loop ends; if not everything has been evaluated in the stack yet
             while opstack != []:
                 op = opstack.pop()
@@ -114,8 +128,13 @@ def test_get_Priority():
     assert get_Priority("*") == 2, "Should be 2"
     assert get_Priority("/") == 2, "Should be 2"
 
+def test_get_num():
+    assert get_num("500") == 500, "Should be 500"
+    assert get_num("500+2") == 500, "Should be 500"
+
+
 def test_calc():
-    assert calc("3+4*2") == 11, "Should be 11"
+    assert calc("3+4*2") == 11
     assert calc("(3+4)*2") == 14, "Should be 14"
     assert calc("((3+4)") == "Parentheses are not properly balanced"
     assert calc("()") == "Equation not properly written"
@@ -125,11 +144,14 @@ def test_calc():
     assert calc("2/2") == 1, "Should be 1"
     assert calc("5*(2/2)") == 5, "Should be 5"
     assert calc("5* (2/ 2)") == 5, "Should be 5"
+    assert calc("50*10") == 500, "Should be 500"
+    assert calc("20+(12/2)") == 26, "Should be 26"
 
 if __name__ == "__main__":
     test_evaluate()
     test_isOp()
     test_isBalanced()
     test_get_Priority()
+    test_get_num()
     test_calc()
     print("All tests have passed!")
