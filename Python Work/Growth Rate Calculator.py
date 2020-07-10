@@ -13,4 +13,4 @@ if __name__ == "__main__":
     n2 = input("Enter your second number: ")
     #years
     years= input("How many years are you calculating for?: ")
-    print(growth_rate(int(n1),int(n2),int(years)))    
+    print(growth_rate(int(n1),int(n2),int(years)))   
