@@ -7,19 +7,19 @@ wordList = ["Stein/M", "Carts/AU", "Craig/MS"]
 
 
 
-#make_List_Upper: list-of-words -> list-of-words
-#Purpose: to set the given list of words to be entirely upper case
-def make_List_Upper(low):
+#make_List_Upper: list-of-strings -> list-of-strings
+#Purpose: to set the given list of strings to be entirely upper case
+def make_List_Upper(los):
     res = []
-    for word in low:
+    for word in los:
         res.append(word.upper())
     return res
 
-#update_words: low num -> low
-#purpose to make the given list of words suitable to be used
-def update_words(low, size):
+#update_words: los num -> los
+#purpose to make the given list of strings suitable to be used
+def update_words(los, size):
     res = []
-    for word in low:
+    for word in los:
             new_word = word[0:(word.find("/"))]
             if len(new_word) == size:
                 res.append(new_word)
@@ -55,17 +55,17 @@ def compare_word(string1, string2):
     return ' '.join(res)
 
 
-#Wordle: list-of-words -> 
+#Wordle: list-of-string -> 
 #purpose: the main function of the game
-def Wordle(low):
+def Wordle(los):
     print("Welcome to Super Ultra Special Wordle (not affiliated with Wordle in the slightest)!")
     print("Here are the rules:")
     print("A '-' indicates the letter in the corresponding spot does not exist in the answer")
     print("A '*' indicates the letter in the corresponding spot does exist in the answer, but is currently in the wrong spot")
     print("A '+' indicates the letter in the corresponding spot is correct")
-    size = input("What length would you like to try guessing?: ")
-    goodList = update_words(low, size)
-    r = random.randint(0,len(goodList)-1)
+    size = int(input("What length would you like to try guessing?: "))
+    goodList = update_words(los,size)
+    r = random.randint(0,(len(goodList)-1))
     word_of_the_game = goodList[r]#randomly selects a full capital word from 
     attempts = 6 #number of tries a player gets in a game
     while(attempts>0):
@@ -88,8 +88,8 @@ def test_make_List_Upper():
 #test_update_words: ->
 #purpose: to test the update_words function
 def test_update_words():
-    tlist = ["stein/M", 'carts/MS']
-    assert update_words(tlist, 5) == ["STEIN", "CARTS"]
+    tlist = ["stein/M", 'carts/MS', "CRAIG/AU"]
+    assert update_words(tlist, 5) == ["STEIN", "CARTS", "CRAIG"]
 
 
 #test_explode: ->
@@ -112,4 +112,5 @@ if __name__ == "__main__":
     test_compare_word()
     test_update_words()
     Wordle(wordList)
+    #print(len(update_words(wordList, 5))-1)
     print("All Test Succeeded!")
