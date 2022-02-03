@@ -38,21 +38,32 @@ def explode(str):
 
 
 #compare_word: string string-> string
-#purpose: compares how close string2 is to string1
-#assumption: no duplicate letters in strings possible (ex. Hello, Goods, Trees, etc.)
-def compare_word(string1, string2):
-    correct_list = explode(string1)
-    guess_list = explode(string2)
-    res = []#accumulator where output is stored
+#purpose: compares how close the guess word is to the answer word
+def compare_word(answer, guess):
+    correct_list = explode(answer)
+    guess_list = explode(guess)
+    res = []
     for letter in guess_list:
         if (letter in correct_list):
-            if (string1.find(letter) == string2.find(letter)):
+            if (answer.find(letter) == guess.find(letter)):
                 res.append("+") #if the letter is in the right place
             else:
                 res.append("*") #if the letter is in the wrong place but exists in the word
         else:
             res.append("-") #if the letter does not exist in the word
     return ' '.join(res)
+
+#Currently Does not work if any word has a duplicate letter in it (ex. books, skies)
+#How to make it work:
+#1. Check to see if the letter exists in the answer word
+#2. if it does, check to see if where the letter is in the guess word is correct or not
+    #If it is correct put down a '+'
+#3. If it is not correct,
+        #check to see if the answer has it as a duplicate letter
+        #If it does,
+            #check to see if the guess has the letter in the correct spot later in the word
+        #If it doesn't
+            #place a '-'
 
 
 #Wordle: list-of-string -> 
@@ -103,14 +114,16 @@ def test_explode():
 def test_compare_word():
     assert compare_word("STEIN", "STEIN") == "+ + + + +"
     assert compare_word("CARTS", "STEIN") == "* * - - -"
+    #Duplicate Tests
+    assert compare_word("ABCDA", "BCDAA") == "* * * * +"
+    assert compare_word("ABCDE", "BCDAA") == "* * * * -"
+    assert compare_word("")
 
 
 if __name__ == "__main__":
-    tlist = ["stein/MS"]
     test_make_List_Upper()
     test_explode()
     test_compare_word()
     test_update_words()
     Wordle(wordList)
-    #print(len(update_words(wordList, 5))-1)
     print("All Test Succeeded!")
